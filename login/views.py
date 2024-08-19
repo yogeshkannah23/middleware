@@ -104,11 +104,13 @@ class GetAllPost(APIView):
         try:
             payload = jwt.decode(token,'secret',algorithms=['HS256'])
         except jwt.ExpiredSignatureError:
-            raise AuthenticationFailed('unauthenticated!')
+            raise AuthenticationFailed('Token expired!')
         
-        
-        post = Post.objects.all()
+        # user_id = payload['id']
+        # request.data['author'] = user_id
+        post = request.posts
         serializers = PostSerializers(post,many=True)
+
         return Response(serializers.data)
     
 class GetByUser(APIView):
